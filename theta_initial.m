@@ -1,4 +1,4 @@
-function [theta_initial,res_var] = theta_initial(time0,Q_vector_train,time_train,demand_train,level_diff_train)
+function [theta_initial,res_var] = theta_initial(time0,time_train,demand_train,level_diff_train,level_train)
 % calculate the initial value of theta according to the inventory regression equation
 % input parameter:
 % time0: the time of order arrival
@@ -20,7 +20,7 @@ for i = 1:cell_length
     time_i_diff=diff(time_i);
     demand_i=demand_train{i};
     level_diff_i=level_diff_train{i};
-    level_i = [Q_vector_train(i);Q_vector_train(i) + cumsum(level_diff_i.*time_i_diff)];
+    level_i = level_train{i};
     % inventory equation
     inventory_i=-0.5*(level_i(2:end)+level_i(1:end-1)).*time_i_diff;
     H_inventory=[H_inventory;inventory_i];

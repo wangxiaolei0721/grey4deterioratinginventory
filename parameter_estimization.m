@@ -27,7 +27,7 @@ time_true = {};
 demand_true = {};
 level_true = {};
 level_diff_true = {};
-time_simu0 = {};
+time_simu_t0 = {};
 level_simu = {};
 time_simu = {};
 demand_simu = {};
@@ -41,7 +41,7 @@ for i = 1:m
     level_diff_true{i}=level_diff_true_i;
     level_true{i}=[Q_vector(i);level_true_i];
     % simulated level
-    [time_simu_i,demand_simu_i,level_diff_simu_i,level_simu_i] = inventory_level_simulation(alpha,beta,p_vector(i),std_dev,theta,time0,delta_t,Q_vector(i));
+    [time_simu_i,demand_simu_i,level_diff_simu_i,~] = inventory_level_simulation(alpha,beta,p_vector(i),std_dev,theta,time0,delta_t,Q_vector(i));
     time_simu{i} = time_simu_i;
     demand_simu{i} = demand_simu_i;
     level_diff_simu{i}=level_diff_simu_i;
@@ -53,9 +53,9 @@ for i = 1:m
     time_i=[time0;time_simu{i}];
     time_i_diff=diff(time_i);
     level_diff_i=level_diff_simu{i};
-    level_i = [Q_vector(i);Q_vector(i) + cumsum(level_diff_i.*time_i_diff)];
-    time_simu0{i} = time_i;
-    level_simu{i}=level_i;
+    level_simu_i = [Q_vector(i);Q_vector(i) + cumsum(level_diff_i.*time_i_diff)];
+    time_simu_t0{i} = time_i;
+    level_simu{i}=level_simu_i;
 end
 %% estimation
 train_length = 0.8 * m;
@@ -63,12 +63,13 @@ train_length = 0.8 * m;
 time_train=time_simu(1:train_length);
 demand_train=demand_simu(1:train_length);
 level_diff_train=level_diff_simu(1:train_length);
+level_train=level_simu(1:train_length);
 p_vector_train = p_vector(1:train_length);
 Q_vector_train = Q_vector(1:train_length);
 % the initial value of theta
-[theta_initial,inventory_var] = theta_initial(time0,Q_vector_train,time_train,demand_train,level_diff_train);
+[theta_initial,inventory_var] = theta_initial(time0,time_train,demand_train,level_diff_train,level_train);
 % the initial alpha and beta correponding to theta_initial
-[~,~,demand_var] = theta2alphabeta(time0,time_train,demand_train,p_vector_train,theta_initial);
+[~,~,demand_var] = theta2alphabeta(time0,time_train,p_vector_train,demand_train,theta_initial);
 % weight definition
 weight_initial=[1/demand_var;1/inventory_var];
 % maximum number of iterations
@@ -76,11 +77,11 @@ max_iter=10;
 % maximum tolerance
 tol=1e-10;
 % Iteratively Reweighed Least Squares algorithm for parameter estimation
-[theta_estimate, history] = IRLS(time0,Q_vector_train,time_train,demand_train,level_diff_train,p_vector_train,weight_initial,theta_initial, max_iter, tol);
+[theta_estimate, history] = IRLS(time0,p_vector_train,time_train,demand_train,level_diff_train,level_train,weight_initial,theta_initial, max_iter, tol);
 %  the estimated values of alpha and beta based on theta
-[alpha_estimate,beta_estimate] = theta2alphabeta(time0,time_train,demand_train,p_vector_train,theta_estimate);
+[alpha_estimate,beta_estimate] = theta2alphabeta(time0,time_train,p_vector_train,demand_train,theta_estimate);
 disp(theta_estimate - theta_initial)
-save(".\data\parameter.mat","alpha_estimate","beta_estimate","theta_estimate")
+% save(".\data\parameter.mat","alpha_estimate","beta_estimate","theta_estimate")
 %% fit level
 time_fit = {};
 demand_fit = {};
@@ -134,7 +135,7 @@ for i = 1:m
     nexttile
     plot(time_true{i},level_true{i},'LineWidth',1)
     hold on
-    plot(time_simu0{i},level_simu{i},'LineWidth',1)
+    plot(time_simu_t0{i},level_simu{i},'LineWidth',1)
     % plot(time_fit{i},level_fit{i},'LineWidth',1)
     xlabel({'Day'},'FontSize',12)
     ylabel(['Inventory level'],'FontSize',12)

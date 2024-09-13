@@ -1,4 +1,4 @@
-function [alpha,beta,res_var] = theta2alphabeta(time0,time_train,demand_train,p_vector_train,theta)
+function [alpha,beta,res_var] = theta2alphabeta(time0,time_train,p_vector_train,demand_train,theta)
 % calculate the initial values of alpha and beta based on theta
 % input parameter:
 % time0: the time of order arrival

@@ -1,4 +1,4 @@
-function res_var = theta_inventoryres(time0,Q_vector_train,time_train,demand_train,level_diff_train,theta)
+function res_var = theta_inventoryres(time0,time_train,demand_train,level_diff_train,level_train,theta)
 % calculate the residual variance of inventory regression equation based on theta
 % input parameter:
 % Q_vector_train: order quantity vector
@@ -19,7 +19,7 @@ for i = 1:cell_length
     time_i_diff=diff(time_i);
     demand_i=demand_train{i};
     level_diff_i=level_diff_train{i};
-    level_i = [Q_vector_train(i);Q_vector_train(i) + cumsum(level_diff_i.*time_i_diff)];
+    level_i = level_train{i};
     % inventory equation
     inventory_i=-0.5*(level_i(2:end)+level_i(1:end-1)).*time_i_diff;
     H_inventory=[H_inventory;inventory_i];

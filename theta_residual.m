@@ -1,4 +1,4 @@
-function residual = theta_residual(time0,Q_vector_train,time_train,demand_train,level_diff_train,p_vector_train,weight,theta)
+function residual = theta_residual(time0,time_train,p_vector_train,demand_train,level_diff_train,level_train,weight,theta)
 % Iteratively Reweighed Least Squares algorithm
 % input parameter:
 % time0: the time of order arrival
@@ -33,7 +33,7 @@ for i = 1:cell_length
     Y_demand=[Y_demand;demand_i];
     % inventory equation
     level_diff_i=level_diff_train{i};
-    level_i = [Q_vector_train(i);Q_vector_train(i) + cumsum(level_diff_i.*time_i_diff)];
+    level_i = level_train{i};
     inventory_i=-0.5*(level_i(2:end)+level_i(1:end-1)).*time_i_diff;
     H_inventory=[H_inventory;inventory_i];
     Y_inventory_diff=[Y_inventory_diff;level_diff_i+demand_i];

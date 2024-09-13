@@ -1,4 +1,4 @@
-function [theta_next, history] = IRLS(time0,Q_vector_train,time_train,demand_train,level_diff_train,p_vector_train,weight_initial,theta_initial, max_iter, tol)
+function [theta_next, history] = IRLS(time0,p_vector_train,time_train,demand_train,level_diff_train,level_train,weight_initial,theta_initial, max_iter, tol)
 % Iteratively Reweighed Least Squares algorithm
 % input parameter:
 % time0: the time of order arrival
@@ -28,14 +28,14 @@ opt_options=optimoptions(@lsqnonlin,'Algorithm','levenberg-marquardt','MaxFuncti
 
 for iter = 2:max_iter
     % residual function of lambda under multiple orders
-    minobjfun = @(theta) theta_residual(time0,Q_vector_train,time_train,demand_train,level_diff_train,p_vector_train,weight,theta);
+    minobjfun = @(theta) theta_residual(time0,time_train,p_vector_train,demand_train,level_diff_train,level_train,weight,theta);
     % next theta
     theta_next = lsqnonlin(minobjfun,theta_prev,0,0.2,opt_options);
     % the residual variance of inventory regression equation based on theta
-    inventory_var = theta_inventoryres(time0,Q_vector_train,time_train,demand_train,level_diff_train,theta_next);
+    inventory_var = theta_inventoryres(time0,time_train,demand_train,level_diff_train,level_train,theta_next);
     % the initial values of alpha and beta based on theta
-    [~,~,demand_var] = theta2alphabeta(time0,time_train,demand_train,p_vector_train,theta_next);
-    % weight
+    [~,~,demand_var] = theta2alphabeta(time0,time_train,p_vector_train,demand_train,theta_next);
+    % weight 
     weight=[1/demand_var;1/inventory_var];
     % check for convergence
     if norm(theta_next - theta_prev) < tol
