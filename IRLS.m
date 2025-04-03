@@ -2,7 +2,6 @@ function [theta_next, history] = IRLS(time0,p_vector_train,time_train,demand_tra
 % Iteratively Reweighed Least Squares algorithm
 % input parameter:
 % time0: the time of order arrival
-% Q_vector_train: order quantity vector
 % time_train: the sample time
 % demand_train: the demand
 % level_diff_train: level changes
@@ -19,7 +18,7 @@ function [theta_next, history] = IRLS(time0,p_vector_train,time_train,demand_tra
 % previous theta
 theta_prev = theta_initial;
 % initial history
-history = zeros(max_iter,1); % 记录每次迭代的参数估计值
+history = NaN(max_iter,1); % 记录每次迭代的参数估计值
 history(1) = theta_initial;
 weight=weight_initial;
 

@@ -30,10 +30,10 @@ time_k=time_k1+delta_t;
 % demand quantity
 demand = theta\1*(alpha-beta*p)*(exp(-theta.*(time_k1-time0))-exp(-theta.*(time_k-time0)));
 % keep demand >0
-demand_error = delta_t*demand + std_dev*randn;
+demand_error = demand + std_dev*randn;
 while demand_error<0
     % demand with error = demand + random error
-    demand_error = delta_t*demand + std_dev*randn;
+    demand_error = demand + std_dev*randn;
 end
 % deteriorating quantity
 deterioration=theta*(0.5*levelattime(alpha,beta,p,theta,time_k,time0,Q) ...
@@ -58,9 +58,9 @@ while level_remain > 0
     % demand quantity
     demand = 0.5*demand_rate(alpha,beta,p,theta,time_k,time0)+0.5*demand_rate(alpha,beta,p,theta,time_k1,time0);
     % demand with error = demand + random error
-    demand_error = delta_t*demand + std_dev*randn;
+    demand_error = demand + std_dev*randn;
     while demand_error<0
-        demand_error = delta_t*demand + std_dev*randn;
+        demand_error = demand + std_dev*randn;
     end
     % deteriorating quantity
     deterioration=theta*(0.5*levelattime(alpha,beta,p,theta,time_k,time0,Q) ...

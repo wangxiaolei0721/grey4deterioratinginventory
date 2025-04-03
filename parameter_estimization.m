@@ -6,10 +6,10 @@ close all;
 % equation parameters
 alpha=120;
 beta=10;
-theta=0.10;
+theta=0.05;
 %% simulation settings
 % random seed
-rng(10) % 10
+rng(100) % 0 8 9
 % the order quantity
 Q_vector=360+randi([0,120],10,1);
 % the sales price
@@ -81,7 +81,7 @@ tol=1e-10;
 %  the estimated values of alpha and beta based on theta
 [alpha_estimate,beta_estimate] = theta2alphabeta(time0,time_train,p_vector_train,demand_train,theta_estimate);
 disp(theta_estimate - theta_initial)
-% save(".\data\parameter.mat","alpha_estimate","beta_estimate","theta_estimate")
+save(".\data\parameter.mat","alpha_estimate","beta_estimate","theta_estimate")
 %% fit level
 time_fit = {};
 demand_fit = {};
@@ -107,23 +107,23 @@ tiledlayout(2,m/2,'Padding','Compact');
 for i = 1:m
     figure(fdemand)
     nexttile
-    plot(time_true{i},demand_true{i},'LineWidth',1)
+    plot(time_true{i},demand_true{i},'LineWidth',1.5)
     hold on
-    plot(time_simu{i},demand_simu{i},'LineWidth',1)
-    plot(time_fit{i},demand_fit{i},'LineWidth',1)
+    plot(time_simu{i},demand_simu{i},'LineWidth',1.5)
+    plot(time_fit{i},demand_fit{i},'LineWidth',1.5)
     xlabel({'Day'},'FontSize',12)
     ylabel(['Demand'],'FontSize',12)
     title(strcat("(",char(96 + i),") The ", num2str(i),"th ordering cycle"),'FontSize',14)
     set(gca,'FontName','Book Antiqua','FontSize',10)
     if i==10
-        legend(["Standard demand","Simulated demand","Fitted demand"],'location','northeast','FontSize',10,'NumColumns',1)
+        legend(["Standard demand","Simulated demand","Fitted demand"],'location','northeast','FontSize',8,'NumColumns',1)
     end
     figure(finvertorydiff)
     nexttile
-    plot(time_true{i}(2:end),level_diff_true{i},'LineWidth',1)
+    plot(time_true{i}(2:end),level_diff_true{i},'LineWidth',1.5)
     hold on
-    plot(time_simu{i},level_diff_simu{i},'LineWidth',1)
-    plot(time_fit{i}(2:end),level_diff_fit{i},'LineWidth',1)
+    plot(time_simu{i},level_diff_simu{i},'LineWidth',1.5)
+    plot(time_fit{i}(2:end),level_diff_fit{i},'LineWidth',1.5)
     xlabel({'Day'},'FontSize',12)
     ylabel(['Inventory change'],'FontSize',12)
     title(strcat("(",char(96 + i),") The ", num2str(i),"th ordering cycle"),'FontSize',14)
@@ -133,9 +133,9 @@ for i = 1:m
     end
     figure(finvertory)
     nexttile
-    plot(time_true{i},level_true{i},'LineWidth',1)
+    plot(time_true{i},level_true{i},'LineWidth',1.5)
     hold on
-    plot(time_simu_t0{i},level_simu{i},'LineWidth',1)
+    plot(time_simu_t0{i},level_simu{i},'LineWidth',1.5)
     % plot(time_fit{i},level_fit{i},'LineWidth',1)
     xlabel({'Day'},'FontSize',12)
     ylabel(['Inventory level'],'FontSize',12)
