@@ -1,10 +1,10 @@
-function level = levelattime(alpha,beta,p,theta,time,time0,Q)
+function level = levelattime(alpha,beta,p,lambda,time,time0,Q)
 % calculate inventory levels at a specific time
 % input parameter:
 % alpha: basic demand
 % beta: price sensitivity coefficient
 % p: price
-% theta: deteriorating rate
+% lambda: deteriorating rate
 % time: the time to be evaluated
 % time0: the time of order arrival
 % Q: the order quantity
@@ -16,7 +16,7 @@ function level = levelattime(alpha,beta,p,theta,time,time0,Q)
 T=Q/(alpha-beta*p);
 % the moment when the inventory drops to 0
 tT=time0+T;
-level=(alpha-beta*p)*exp(-theta*(time-time0))*(tT-time);
+level=(alpha-beta*p)*exp(-lambda*(time-time0))*(tT-time);
 
 
 end

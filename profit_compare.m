@@ -6,7 +6,7 @@ close all;
 % equation parameters
 alpha=120;
 beta=10;
-theta=0.05;
+lambda=0.05;
 % load estimated parameters
 load(".\data\parameter.mat")
 %% economic order quantity
@@ -25,33 +25,33 @@ fprofit_opt_compare=figure('unit','centimeters','position',[5,5,30,15],'PaperPos
 tiledlayout(1,2,'Padding','Compact');
 nexttile
 % order cycle to be evaluated
-profit_simu_fd = @(p,T) profit(alpha,beta,p,theta,c,h,K,T);
-profit_appro_simu_fd = @(p,T) profit_appro(alpha,beta,p,theta,c,h,K,T);
+profit_simu_fd = @(p,T) profit(alpha,beta,p,lambda,c,h,K,T);
+profit_appro_simu_fd = @(p,T) profit_appro(alpha,beta,p,lambda,c,h,K,T);
 % [xmin xmax ymin ymax]
 fsurf(profit_simu_fd,[p_simu_interval,T_interval])
 hold on
 fsurf(profit_appro_simu_fd,[p_fit_interval,T_interval])
-xlabel({'Price'},'FontSize',12)
-ylabel(['Ordering cycle'],'FontSize',12)
-zlabel(['Profit'],'FontSize',12)
+xlabel({'Price'},'FontSize',14)
+ylabel(['Ordering cycle'],'FontSize',14)
+zlabel(['Profit'],'FontSize',14)
 % title(["(b) 仿真参数"],'FontSize',14)
-legend(["Profit surface of simulated parameters","Approximate profit surface of simulated parameters"],'location','northeast','FontSize',8,'NumColumns',1)
-set(gca,'FontName','Book Antiqua','FontSize',12)
+legend(["Profit surface of simulated parameters","Approximate profit surface of simulated parameters"],'location','north','FontSize',12,'NumColumns',1)
+set(gca,'FontName','Book Antiqua','FontSize',14)
 %% plot approximated profit function
 % order cycle to be evaluated
-profit_appro_simu_fd = @(p,T) profit_appro(alpha,beta,p,theta,c,h,K,T);
-profit_appro_fit_fd = @(p,T) profit_appro(alpha_estimate,beta_estimate,p,theta_estimate,c,h,K,T);
+profit_appro_simu_fd = @(p,T) profit_appro(alpha,beta,p,lambda,c,h,K,T);
+profit_appro_fit_fd = @(p,T) profit_appro(alpha_estimate,beta_estimate,p,lambda_estimate,c,h,K,T);
 % [xmin xmax ymin ymax]
 nexttile
 fsurf(profit_appro_simu_fd,[p_simu_interval,T_interval])
 hold on
 fsurf(profit_appro_fit_fd,[p_fit_interval,T_interval])
-xlabel({'Price'},'FontSize',12)
-ylabel(['Ordering cycle'],'FontSize',12)
-zlabel(['Profit'],'FontSize',12)
+xlabel({'Price'},'FontSize',14)
+ylabel(['Ordering cycle'],'FontSize',14)
+zlabel(['Profit'],'FontSize',14)
 % title(["(b) 估计参数"],'FontSize',14)
-legend(["Profit surface of estimated parameters","Approximate profit surface of estimated parameters"],'location','northeast','FontSize',8,'NumColumns',1)
-set(gca,'FontName','Book Antiqua','FontSize',12)
+legend(["Profit surface of estimated parameters","Approximate profit surface of estimated parameters"],'location','north','FontSize',12,'NumColumns',1)
+set(gca,'FontName','Book Antiqua','FontSize',14)
 %% save figure
 savefig(fprofit_opt_compare,'.\figure\profit_opt_compare.fig')
 exportgraphics(fprofit_opt_compare,'.\figure\profit_opt_compare.pdf')

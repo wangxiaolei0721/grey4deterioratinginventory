@@ -1,10 +1,10 @@
-function demand = demand_rate(alpha,beta,p,theta,time,time0)
+function demand = demand_rate(alpha,beta,p,lambda,time,time0)
 % generate the demand
 % input parameter:
 % alpha: basic demand
 % beta: price sensitivity coefficient
 % p: price
-% theta: deteriorating rate
+% lambda: deteriorating rate
 % time0: the time of order arrival
 % time: the time 
 % output parameter
@@ -14,7 +14,7 @@ function demand = demand_rate(alpha,beta,p,theta,time,time0)
 % the potential demand
 D_p=alpha-beta*p;
 % the quality decay level
-R_t=exp(-theta*(time-time0));
+R_t=exp(-lambda*(time-time0));
 % demand rate
 demand=D_p*R_t;
 

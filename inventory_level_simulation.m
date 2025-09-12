@@ -1,11 +1,11 @@
-function [time_simu,demand_simu,level_diff_simu,level_simu] = inventory_level_simulation(alpha,beta,p,std_dev,theta,time0,delta_t,Q)
+function [time_simu,demand_simu,level_diff_simu,level_simu] = inventory_level_simulation(alpha,beta,p,std_dev,lambda,time0,delta_t,Q)
 % simulate inventory levels and inventory changes 
 % input parameter:
 % alpha: basic demand
 % beta: price sensitivity coefficient
 % p: price
 % std_dev: standard deviation of error in demand regression equation
-% theta: deteriorating rate
+% lambda: deteriorating rate
 % time0: the time of order arrival
 % delta_t: the time resolution
 % Q: the order quantity
@@ -28,7 +28,7 @@ time_k1=time0;
 % record t_k
 time_k=time_k1+delta_t;
 % demand quantity
-demand = theta\1*(alpha-beta*p)*(exp(-theta.*(time_k1-time0))-exp(-theta.*(time_k-time0)));
+demand = lambda\1*(alpha-beta*p)*(exp(-lambda.*(time_k1-time0))-exp(-lambda.*(time_k-time0)));
 % keep demand >0
 demand_error = demand + std_dev*randn;
 while demand_error<0
@@ -36,8 +36,8 @@ while demand_error<0
     demand_error = demand + std_dev*randn;
 end
 % deteriorating quantity
-deterioration=theta*(0.5*levelattime(alpha,beta,p,theta,time_k,time0,Q) ...
-    +0.5*levelattime(alpha,beta,p,theta,time_k1,time0,Q));
+deterioration=lambda*(0.5*levelattime(alpha,beta,p,lambda,time_k,time0,Q) ...
+    +0.5*levelattime(alpha,beta,p,lambda,time_k1,time0,Q));
 % reduction expectation
 deterioration_poissrnd = poissrnd(delta_t*(deterioration));
 % random reduction
@@ -56,15 +56,15 @@ while level_remain > 0
     % update t_{k}
     time_k=time_k+delta_t;
     % demand quantity
-    demand = 0.5*demand_rate(alpha,beta,p,theta,time_k,time0)+0.5*demand_rate(alpha,beta,p,theta,time_k1,time0);
+    demand = 0.5*demand_rate(alpha,beta,p,lambda,time_k,time0)+0.5*demand_rate(alpha,beta,p,lambda,time_k1,time0);
     % demand with error = demand + random error
     demand_error = demand + std_dev*randn;
     while demand_error<0
         demand_error = demand + std_dev*randn;
     end
     % deteriorating quantity
-    deterioration=theta*(0.5*levelattime(alpha,beta,p,theta,time_k,time0,Q) ...
-        +0.5*levelattime(alpha,beta,p,theta,time_k1,time0,Q));
+    deterioration=lambda*(0.5*levelattime(alpha,beta,p,lambda,time_k,time0,Q) ...
+        +0.5*levelattime(alpha,beta,p,lambda,time_k1,time0,Q));
     % reduction expectation
     % disp(delta_t*(deterioration))
     deterioration_poissrnd = poissrnd(delta_t*(deterioration));
